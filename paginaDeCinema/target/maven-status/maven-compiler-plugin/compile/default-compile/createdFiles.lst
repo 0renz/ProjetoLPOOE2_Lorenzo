@@ -1,0 +1,10 @@
+paginadecinema\modelo\dao\PersistenciaJPA.class
+paginadecinema\modelo\Atores.class
+paginadecinema\modelo\dao\InterfacePersistencia.class
+paginadecinema\modelo\Dubles.class
+paginadecinema\modelo\SexoAtor.class
+paginadecinema\modelo\Diretores.class
+paginadecinema\modelo\Roteiristas.class
+paginadecinema\modelo\Filmes.class
+paginadecinema\modelo\TipoDiretor.class
+paginadecinema\PaginaDeCinema.class
