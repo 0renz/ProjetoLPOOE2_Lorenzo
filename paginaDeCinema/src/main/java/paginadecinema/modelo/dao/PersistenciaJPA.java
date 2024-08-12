@@ -12,7 +12,7 @@ public class PersistenciaJPA implements InterfacePersistencia {
     public PersistenciaJPA(){
         
         //parametro: é o nome da unidade de persistencia (Persistence Unit)
-        factory = Persistence.createEntityManagerFactory("ProjetoLPOOE1_Lorenzo_paginaDeCinema_jar_1.0PU");
+        factory = Persistence.createEntityManagerFactory("ProjetoLPOOE2_Lorenzo_paginaDeCinema_jar_1.0PU");
         entity = factory.createEntityManager();        
     }
     

@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.List;
 
 @Entity
-@Table (name = "tb_filmes")
+@Table(name = "tb_filmes")
 public class Filmes implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,13 +22,13 @@ public class Filmes implements Serializable {
     @Column(nullable = false)
     private Double notaIMDb;
 
-    @ManyToMany
-    @JoinTable(
-        name = "tb_Filme_Roteirista",
-        joinColumns = @JoinColumn(name = "idFilme"),
-        inverseJoinColumns = @JoinColumn(name = "idRoteirista")
-    )
-    private List<Roteiristas> roteiristas;
+    @ManyToOne
+    @JoinColumn(name = "idRoteirista", nullable = false)
+    private Roteiristas roteirista;
+
+    @ManyToOne
+    @JoinColumn(name = "idDiretor", nullable = false)
+    private Diretores diretor;
 
     @ManyToMany
     @JoinTable(
@@ -37,15 +37,6 @@ public class Filmes implements Serializable {
         inverseJoinColumns = @JoinColumn(name = "idAtor")
     )
     private List<Atores> atores;
-
-    @ManyToMany
-    @JoinTable(
-        name = "tb_Filme_Diretor",
-        joinColumns = @JoinColumn(name = "idFilme"),
-        inverseJoinColumns = @JoinColumn(name = "idDiretor")
-    )
-    private List<Diretores> diretores;
-
 
     public Integer getIdFilme() {
         return idFilme;
@@ -79,12 +70,20 @@ public class Filmes implements Serializable {
         this.notaIMDb = notaIMDb;
     }
 
-    public List<Roteiristas> getRoteiristas() {
-        return roteiristas;
+    public Roteiristas getRoteirista() {
+        return roteirista;
     }
 
-    public void setRoteiristas(List<Roteiristas> roteiristas) {
-        this.roteiristas = roteiristas;
+    public void setRoteirista(Roteiristas roteirista) {
+        this.roteirista = roteirista;
+    }
+
+    public Diretores getDiretor() {
+        return diretor;
+    }
+
+    public void setDiretor(Diretores diretor) {
+        this.diretor = diretor;
     }
 
     public List<Atores> getAtores() {
@@ -93,13 +92,5 @@ public class Filmes implements Serializable {
 
     public void setAtores(List<Atores> atores) {
         this.atores = atores;
-    }
-
-    public List<Diretores> getDiretores() {
-        return diretores;
-    }
-
-    public void setDiretores(List<Diretores> diretores) {
-        this.diretores = diretores;
     }
 }

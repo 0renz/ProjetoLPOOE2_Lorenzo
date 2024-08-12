@@ -5,7 +5,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table (name = "tb_roteiristas")
+@Table(name = "tb_roteiristas")
 public class Roteiristas implements Serializable {
     
     @Id
@@ -15,7 +15,7 @@ public class Roteiristas implements Serializable {
     @Column(nullable = false, length = 155)
     private String nomeRoteirista;
 
-    @ManyToMany(mappedBy = "roteiristas")
+    @OneToMany(mappedBy = "roteirista")
     private List<Filmes> filmes;
 
     public Integer getIdRoteirista() {

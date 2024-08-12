@@ -5,7 +5,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table (name = "tb_diretores")
+@Table(name = "tb_diretores")
 public class Diretores implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +17,7 @@ public class Diretores implements Serializable {
     @Enumerated(EnumType.STRING)
     private TipoDiretor tipoDiretor;
 
-    @ManyToMany(mappedBy = "diretores")
+    @OneToMany(mappedBy = "diretor")
     private List<Filmes> filmes;
 
     public Integer getIdDiretor() {
@@ -32,8 +32,8 @@ public class Diretores implements Serializable {
         return nomeDiretor;
     }
 
-    public void setNomeDiretor(String nomeDirector) {
-        this.nomeDiretor = nomeDirector;
+    public void setNomeDiretor(String nomeDiretor) {
+        this.nomeDiretor = nomeDiretor;
     }
 
     public TipoDiretor getTipoDiretor() {

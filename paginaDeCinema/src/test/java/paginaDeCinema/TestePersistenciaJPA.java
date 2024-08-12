@@ -8,7 +8,8 @@ import java.util.GregorianCalendar;
 import java.util.Arrays;
 
 public class TestePersistenciaJPA {
-      @Test
+
+    @Test
     public void testConexaoJPA() {
         //criar um objeto do tipo PersistenciaJPA.
         PersistenciaJPA jpa = new PersistenciaJPA();
@@ -19,8 +20,8 @@ public class TestePersistenciaJPA {
             System.out.println("nao conectou no BD ...");
 
         }
-    } 
-    
+    }
+
     @Test
     public void testPersistenciaCompleta() throws Exception {
         PersistenciaJPA jpa = new PersistenciaJPA();
@@ -110,40 +111,32 @@ public class TestePersistenciaJPA {
             filme1.setDataEstreia(new GregorianCalendar(2010, Calendar.JULY, 16));
             filme1.setNotaIMDb(8.8);
             filme1.setAtores(Arrays.asList(ator1, ator4));
-            filme1.setDiretores(Arrays.asList(diretor2, diretor1));
-            filme1.setRoteiristas(Arrays.asList(roteirista2));
+            filme1.setDiretor(diretor2);
+            filme1.setRoteirista(roteirista2);
 
             Filmes filme2 = new Filmes();
             filme2.setNomeFilme("Back to the future");
             filme2.setDataEstreia(new GregorianCalendar(1985, Calendar.JULY, 3));
             filme2.setNotaIMDb(8.5);
             filme2.setAtores(Arrays.asList(ator2));
-            filme2.setDiretores(Arrays.asList(diretor3));
-            filme2.setRoteiristas(Arrays.asList(roteirista1, roteirista2, roteirista3));
+            filme2.setDiretor(diretor3);
+            filme2.setRoteirista(roteirista1);
 
             Filmes filme3 = new Filmes();
             filme3.setNomeFilme("Avengers: Endgame");
             filme3.setDataEstreia(new GregorianCalendar(2019, Calendar.APRIL, 26));
             filme3.setNotaIMDb(8.4);
             filme3.setAtores(Arrays.asList(ator3, ator4));
-            filme3.setDiretores(Arrays.asList(diretor5, diretor1));
-            filme3.setRoteiristas(Arrays.asList(roteirista3, roteirista1));
+            filme3.setDiretor(diretor5);
+            filme3.setRoteirista(roteirista3);
 
             Filmes filme4 = new Filmes();
             filme4.setNomeFilme("Forrest Gump");
             filme4.setDataEstreia(new GregorianCalendar(1994, Calendar.JULY, 6));
             filme4.setNotaIMDb(8.8);
             filme4.setAtores(Arrays.asList(ator5, ator1));
-            filme4.setDiretores(Arrays.asList(diretor1));
-            filme4.setRoteiristas(Arrays.asList(roteirista4));
-
-            Filmes filme5 = new Filmes();
-            filme5.setNomeFilme("Pulp Fiction");
-            filme5.setDataEstreia(new GregorianCalendar(1994, Calendar.OCTOBER, 14));
-            filme5.setNotaIMDb(8.9);
-            filme5.setAtores(Arrays.asList(ator3));
-            filme5.setDiretores(Arrays.asList(diretor4));
-            filme5.setRoteiristas(Arrays.asList(roteirista5));
+            filme4.setDiretor(diretor1);
+            filme4.setRoteirista(roteirista4);
 
             jpa.persist(ator1);
             jpa.persist(ator2);
@@ -169,8 +162,7 @@ public class TestePersistenciaJPA {
             jpa.persist(filme2);
             jpa.persist(filme3);
             jpa.persist(filme4);
-            jpa.persist(filme5);
-
+            
             System.out.println("Dados persistidos com sucesso!");
 
             jpa.fecharConexao();
