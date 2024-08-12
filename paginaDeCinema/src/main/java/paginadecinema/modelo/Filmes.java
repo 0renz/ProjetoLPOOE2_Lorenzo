@@ -93,4 +93,9 @@ public class Filmes implements Serializable {
     public void setAtores(List<Atores> atores) {
         this.atores = atores;
     }
+    
+    @Override
+    public String toString() {
+        return idFilme + ": " + nomeFilme + " | " + "Diretor: " + diretor.getNomeDiretor() + " | " + "Roteirista: " + roteirista.getNomeRoteirista();
+    }
 }
