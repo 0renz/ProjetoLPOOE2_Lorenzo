@@ -4,6 +4,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import paginadecinema.modelo.Diretores;
 import paginadecinema.modelo.Filmes;
 import paginadecinema.modelo.Roteiristas;
 
@@ -65,5 +66,9 @@ public class PersistenciaJPA implements InterfacePersistencia {
     
     public List<Roteiristas> getRoteiristas() {
         return entity.createQuery("SELECT m FROM Roteiristas m", Roteiristas.class).getResultList();
+    }
+    
+    public List<Diretores> getDiretores() {
+        return entity.createQuery("SELECT m FROM Diretores m", Diretores.class).getResultList();
     }
 }

@@ -72,6 +72,11 @@ public class TelaInicial extends javax.swing.JFrame {
         });
 
         btnDiretores.setText("Gerenciar Diretores");
+        btnDiretores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDiretoresActionPerformed(evt);
+            }
+        });
 
         btnRoteiristas.setText("Gerenciar Roteiristas");
         btnRoteiristas.addActionListener(new java.awt.event.ActionListener() {
@@ -148,6 +153,15 @@ public class TelaInicial extends javax.swing.JFrame {
             listarFilmes();
         }
     }//GEN-LAST:event_btnRoteiristasActionPerformed
+
+    private void btnDiretoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDiretoresActionPerformed
+        TelaGerenciaDiretores telaDiretores = new TelaGerenciaDiretores(this, true);
+        telaDiretores.setVisible(true);
+        
+        if (!telaDiretores.isVisible()) {
+            listarFilmes();
+        }
+    }//GEN-LAST:event_btnDiretoresActionPerformed
 
     /**
      * @param args the command line arguments

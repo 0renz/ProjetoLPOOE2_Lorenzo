@@ -9,10 +9,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import paginadecinema.modelo.Filmes;
-import paginadecinema.modelo.Roteiristas;
+import paginadecinema.modelo.Diretores;
 import paginadecinema.modelo.dao.PersistenciaJPA;
 
 /**
@@ -25,22 +23,22 @@ public class TelaGerenciaDiretores extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        listarRoteiristas();
+        listarDiretores();
     }
 
     PersistenciaJPA persistencia;
 
-    private void listarRoteiristas() {
+    private void listarDiretores() {
         try {
             persistencia = new PersistenciaJPA();
-            lstRoteiristas.clearSelection();
+            lstDiretores.clearSelection();
             persistencia.conexaoAberta();
-            List<Roteiristas> roteiristas = persistencia.getRoteiristas();
+            List<Diretores> diretores = persistencia.getDiretores();
             DefaultListModel modeloLista = new DefaultListModel<>();
-            for (Roteiristas roteirista : roteiristas) {
-                modeloLista.addElement(roteirista);
+            for (Diretores diretor : diretores) {
+                modeloLista.addElement(diretor);
             }
-            lstRoteiristas.setModel(modeloLista);
+            lstDiretores.setModel(modeloLista);
             persistencia.fecharConexao();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Erro ao listar modalidades: " + ex.getMessage());
@@ -57,14 +55,14 @@ public class TelaGerenciaDiretores extends javax.swing.JDialog {
 
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        lstRoteiristas = new javax.swing.JList<>();
+        lstDiretores = new javax.swing.JList<>();
         btnAdicionar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnRemover = new javax.swing.JButton();
 
-        jLabel1.setText("Gerenciar Roteiristas");
+        jLabel1.setText("Gerenciar Diretores");
 
-        jScrollPane1.setViewportView(lstRoteiristas);
+        jScrollPane1.setViewportView(lstDiretores);
 
         btnAdicionar.setText("Adicionar");
         btnAdicionar.setToolTipText("");
@@ -128,12 +126,12 @@ public class TelaGerenciaDiretores extends javax.swing.JDialog {
 
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
         try {
-            Roteiristas r = new Roteiristas();
-            r.setNomeRoteirista(JOptionPane.showInputDialog("Informe o nome do roteirista: "));
+            Diretores d = new Diretores();
+            d.setNomeDiretor(JOptionPane.showInputDialog("Informe o nome do diretor: "));
             persistencia = new PersistenciaJPA();
             persistencia.conexaoAberta();
-            persistencia.persist(r);
-            listarRoteiristas();
+            persistencia.persist(d);
+            listarDiretores();
         } catch (Exception ex) {
             Logger.getLogger(TelaGerenciaDiretores.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -141,28 +139,28 @@ public class TelaGerenciaDiretores extends javax.swing.JDialog {
 
     private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverActionPerformed
 
-        Roteiristas roteiristaSelecionado = lstRoteiristas.getSelectedValue();
-        if (roteiristaSelecionado != null) {
+        Diretores diretorSelecionado = lstDiretores.getSelectedValue();
+        if (diretorSelecionado != null) {
             int confirmacaoDel = JOptionPane.showConfirmDialog(rootPane,
-                    "Tem certeza que deseja remover o roteirista " + roteiristaSelecionado.getNomeRoteirista() + "?");
+                    "Tem certeza que deseja remover o diretor " + diretorSelecionado.getNomeDiretor() + "?");
             if (confirmacaoDel == JOptionPane.YES_OPTION) {
                 try {
                     persistencia = new PersistenciaJPA();
                     persistencia.conexaoAberta();
 
                     // Recarregar a entidade
-                    Roteiristas roteiristaGerenciado = (Roteiristas) persistencia.find(Roteiristas.class, roteiristaSelecionado.getIdRoteirista());
+                    Diretores diretorGerenciado = (Diretores) persistencia.find(Diretores.class, diretorSelecionado.getIdDiretor());
 
-                    if (roteiristaGerenciado != null) {
-                        persistencia.remover(roteiristaGerenciado);
+                    if (diretorGerenciado != null) {
+                        persistencia.remover(diretorGerenciado);
                     } else {
-                        JOptionPane.showMessageDialog(rootPane, "Roteirista não encontrado no banco de dados.");
+                        JOptionPane.showMessageDialog(rootPane, "Diretor não encontrado no banco de dados.");
                     }
 
                     persistencia.fecharConexao();
-                    listarRoteiristas();
+                    listarDiretores();
                 } catch (Exception e) {
-                    System.err.println("Erro ao excluir modalidade: " + e.getMessage());
+                    System.err.println("Erro ao excluir diretor: " + e.getMessage());
                 } finally {
                     persistencia.fecharConexao();
                 }
@@ -174,32 +172,32 @@ public class TelaGerenciaDiretores extends javax.swing.JDialog {
     }//GEN-LAST:event_btnRemoverActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        Roteiristas roteiristaSelecionado = lstRoteiristas.getSelectedValue();
-        if (roteiristaSelecionado != null) {
+        Diretores diretorSelecionado = lstDiretores.getSelectedValue();
+        if (diretorSelecionado != null) {
             try {
                 persistencia = new PersistenciaJPA();
                 persistencia.conexaoAberta();
 
                 String novoNome = JOptionPane.showInputDialog(this,
-                        "Edite o nome do roteirista:",
-                        roteiristaSelecionado.getNomeRoteirista());
+                        "Edite o nome do diretor:",
+                        diretorSelecionado.getNomeDiretor());
 
                 if (novoNome != null && !novoNome.trim().isEmpty()) {
-                    roteiristaSelecionado.setNomeRoteirista(novoNome);
-                    persistencia.merge(roteiristaSelecionado); // Persiste a mudança no banco de dados
+                    diretorSelecionado.setNomeDiretor(novoNome);
+                    persistencia.merge(diretorSelecionado); // Persiste a mudança no banco de dados
 
-                    listarRoteiristas();
+                    listarDiretores();
                 } else {
                     JOptionPane.showMessageDialog(this, "Nome inválido, edição cancelada.");
                 }
 
             } catch (Exception e) {
-                System.err.println("Erro ao editar o roteirista: " + e.getMessage());
+                System.err.println("Erro ao editar o diretor: " + e.getMessage());
             } finally {
                 persistencia.fecharConexao();
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Selecione um roteirista para editar.");
+            JOptionPane.showMessageDialog(this, "Selecione um diretor para editar.");
         }
     }//GEN-LAST:event_btnEditarActionPerformed
 
@@ -247,6 +245,6 @@ public class TelaGerenciaDiretores extends javax.swing.JDialog {
     private javax.swing.JButton btnRemover;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JList<Roteiristas> lstRoteiristas;
+    private javax.swing.JList<Diretores> lstDiretores;
     // End of variables declaration//GEN-END:variables
 }
