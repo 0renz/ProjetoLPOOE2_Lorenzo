@@ -41,4 +41,9 @@ public class Roteiristas implements Serializable {
     public void setFilmes(List<Filmes> filmes) {
         this.filmes = filmes;
     }
+    
+    @Override
+    public String toString() {
+        return idRoteirista + ": " + nomeRoteirista;
+    }
 }

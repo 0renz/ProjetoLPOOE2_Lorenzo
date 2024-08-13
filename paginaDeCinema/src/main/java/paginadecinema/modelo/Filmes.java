@@ -15,19 +15,19 @@ public class Filmes implements Serializable {
     @Column(nullable = false, length = 155)
     private String nomeFilme;
     
-    @Column(nullable = false)
+    @Column
     @Temporal(javax.persistence.TemporalType.DATE)
     private Calendar dataEstreia;
     
-    @Column(nullable = false)
+    @Column
     private Double notaIMDb;
 
     @ManyToOne
-    @JoinColumn(name = "idRoteirista", nullable = false)
+    @JoinColumn(name = "idRoteirista")
     private Roteiristas roteirista;
 
     @ManyToOne
-    @JoinColumn(name = "idDiretor", nullable = false)
+    @JoinColumn(name = "idDiretor")
     private Diretores diretor;
 
     @ManyToMany
@@ -96,6 +96,6 @@ public class Filmes implements Serializable {
     
     @Override
     public String toString() {
-        return idFilme + ": " + nomeFilme + " | " + "Diretor: " + diretor.getNomeDiretor() + " | " + "Roteirista: " + roteirista.getNomeRoteirista();
+        return idFilme + ": " + nomeFilme;
     }
 }

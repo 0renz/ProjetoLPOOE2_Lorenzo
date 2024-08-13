@@ -5,6 +5,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import paginadecinema.modelo.Filmes;
+import paginadecinema.modelo.Roteiristas;
 
 public class PersistenciaJPA implements InterfacePersistencia {
 
@@ -51,8 +52,18 @@ public class PersistenciaJPA implements InterfacePersistencia {
         entity.remove(o); //realiza o delete
         entity.getTransaction().commit(); //comita a transacao (comando sql)                
     }
+    
+    public void merge(Object o) throws Exception {
+    entity.getTransaction().begin();
+    entity.merge(o);
+    entity.getTransaction().commit();
+}
 
     public List<Filmes> getFilmes() {
         return entity.createQuery("SELECT m FROM Filmes m", Filmes.class).getResultList();
+    }
+    
+    public List<Roteiristas> getRoteiristas() {
+        return entity.createQuery("SELECT m FROM Roteiristas m", Roteiristas.class).getResultList();
     }
 }
