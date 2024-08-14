@@ -4,6 +4,8 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Calendar;
 import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Entity
 @Table(name = "tb_filmes")
@@ -96,6 +98,14 @@ public class Filmes implements Serializable {
     
     @Override
     public String toString() {
-        return idFilme + ": " + nomeFilme;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        Calendar dataEstreia = getDataEstreia(); // Presumindo que isso retorna um Calendar.
+        Date dataEstreiaComoDate = dataEstreia.getTime(); // Convertendo Calendar para Date.
+        String dataString = sdf.format(dataEstreiaComoDate);
+        return idFilme + ": " + nomeFilme + 
+                "| Estreia: " + dataString +
+                "| Nota IMDB: " + getNotaIMDb()+
+                "| Diretor: " + diretor.getNomeDiretor()+ 
+                "| Roteirista:" + roteirista.getNomeRoteirista();
     }
 }

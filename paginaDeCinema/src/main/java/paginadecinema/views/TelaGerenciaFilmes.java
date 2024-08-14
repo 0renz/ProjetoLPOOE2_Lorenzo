@@ -4,6 +4,8 @@
  */
 package paginadecinema.views;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,7 +13,9 @@ import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import paginadecinema.modelo.Diretores;
 import paginadecinema.modelo.Filmes;
+import paginadecinema.modelo.Roteiristas;
 import paginadecinema.modelo.dao.PersistenciaJPA;
 
 /**
@@ -94,19 +98,18 @@ public class TelaGerenciaFilmes extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(160, 160, 160))
             .addGroup(layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnAdicionar, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRemover, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(17, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnAdicionar, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnRemover, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 657, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -114,15 +117,13 @@ public class TelaGerenciaFilmes extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnAdicionar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(64, 64, 64)
-                        .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnRemover, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnRemover, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAdicionar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -131,11 +132,54 @@ public class TelaGerenciaFilmes extends javax.swing.JDialog {
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
         try {
             Filmes f = new Filmes();
+
+            // Get filme name
             f.setNomeFilme(JOptionPane.showInputDialog("Informe o nome do filme: "));
+
+            // Get and parse dataEstreia
+            String dataEstreiaStr = JOptionPane.showInputDialog("Informe a data de estreia (dd/MM/yyyy):");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Calendar dataEstreia = Calendar.getInstance();
+            dataEstreia.setTime(sdf.parse(dataEstreiaStr));
+            f.setDataEstreia(dataEstreia);
+
+            // Get and parse notaIMDb
+            String notaStr = JOptionPane.showInputDialog("Informe a nota do IMDb:");
+            f.setNotaIMDb(Double.parseDouble(notaStr));
+
+            // Get and set Roteirista (assuming you have a method to fetch Roteiristas)
             persistencia = new PersistenciaJPA();
             persistencia.conexaoAberta();
+            List<Roteiristas> roteiristas = persistencia.getRoteiristas();
+         
+            Roteiristas selectedRoteirista = (Roteiristas) JOptionPane.showInputDialog(
+                    null,
+                    "Selecione o Roteirista:",
+                    "Roteirista",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    roteiristas.toArray(),
+                    roteiristas.get(0)
+            );
+            f.setRoteirista(selectedRoteirista);
+
+            // Get and set Diretor (assuming you have a method to fetch Diretores)
+            List<Diretores> diretores = persistencia.getDiretores();
+            Diretores selectedDiretor = (Diretores) JOptionPane.showInputDialog(
+                    null,
+                    "Selecione o Diretor:",
+                    "Diretor",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    diretores.toArray(),
+                    diretores.get(0)
+            );
+            f.setDiretor(selectedDiretor);
+
+            // Persist the new film
             persistencia.persist(f);
-            listarFilmes();
+            persistencia.fecharConexao();
+            listarFilmes(); // Refresh the list
         } catch (Exception ex) {
             Logger.getLogger(TelaGerenciaFilmes.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -177,34 +221,82 @@ public class TelaGerenciaFilmes extends javax.swing.JDialog {
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         Filmes filmeSelecionado = lstFilmes.getSelectedValue();
-        if (filmeSelecionado != null) {
-            try {
-                persistencia = new PersistenciaJPA();
-                persistencia.conexaoAberta();
+    if (filmeSelecionado != null) {
+        try {
+            persistencia = new PersistenciaJPA();
+            persistencia.conexaoAberta();
 
-                // Exibe um diálogo de entrada para o usuário editar o nome do filme
-                String novoNome = JOptionPane.showInputDialog(this,
-                        "Edite o nome do filme:",
-                        filmeSelecionado.getNomeFilme());
+            // Exibe um diálogo de entrada para o usuário editar o nome do filme
+            String novoNome = JOptionPane.showInputDialog(this,
+                    "Edite o nome do filme:",
+                    filmeSelecionado.getNomeFilme());
 
-                // Se o usuário não cancelar e o novo nome não for nulo ou vazio
-                if (novoNome != null && !novoNome.trim().isEmpty()) {
-                    filmeSelecionado.setNomeFilme(novoNome); // Atualiza o nome do filme
-                    persistencia.merge(filmeSelecionado); // Persiste a mudança no banco de dados
-
-                    listarFilmes(); // Atualiza a lista de filmes exibida
-                } else {
-                    JOptionPane.showMessageDialog(this, "Nome inválido, edição cancelada.");
-                }
-
-            } catch (Exception e) {
-                System.err.println("Erro ao editar o filme: " + e.getMessage());
-            } finally {
-                persistencia.fecharConexao();
+            // Se o usuário não cancelar e o novo nome não for nulo ou vazio
+            if (novoNome != null && !novoNome.trim().isEmpty()) {
+                filmeSelecionado.setNomeFilme(novoNome); // Atualiza o nome do filme
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Selecione um filme para editar.");
+
+            // Exibe um diálogo de entrada para o usuário editar a data de estreia
+            String novaDataEstreiaStr = JOptionPane.showInputDialog(this,
+                    "Edite a data de estreia (dd/MM/yyyy):",
+                    new SimpleDateFormat("dd/MM/yyyy").format(filmeSelecionado.getDataEstreia().getTime()));
+            if (novaDataEstreiaStr != null && !novaDataEstreiaStr.trim().isEmpty()) {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                Calendar novaDataEstreia = Calendar.getInstance();
+                novaDataEstreia.setTime(sdf.parse(novaDataEstreiaStr));
+                filmeSelecionado.setDataEstreia(novaDataEstreia); // Atualiza a data de estreia
+            }
+
+            // Exibe um diálogo de entrada para o usuário editar a nota do IMDb
+            String novaNotaIMDbStr = JOptionPane.showInputDialog(this,
+                    "Edite a nota do IMDb:",
+                    filmeSelecionado.getNotaIMDb().toString());
+            if (novaNotaIMDbStr != null && !novaNotaIMDbStr.trim().isEmpty()) {
+                filmeSelecionado.setNotaIMDb(Double.parseDouble(novaNotaIMDbStr)); // Atualiza a nota do IMDb
+            }
+
+            // Exibe um diálogo de seleção para o usuário editar o roteirista
+            List<Roteiristas> roteiristas = persistencia.getRoteiristas();
+            Roteiristas novoRoteirista = (Roteiristas) JOptionPane.showInputDialog(
+                    null,
+                    "Edite o Roteirista:",
+                    "Roteirista",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    roteiristas.toArray(),
+                    filmeSelecionado.getRoteirista());
+            if (novoRoteirista != null) {
+                filmeSelecionado.setRoteirista(novoRoteirista); // Atualiza o roteirista
+            }
+
+            // Exibe um diálogo de seleção para o usuário editar o diretor
+            List<Diretores> diretores = persistencia.getDiretores();
+            Diretores novoDiretor = (Diretores) JOptionPane.showInputDialog(
+                    null,
+                    "Edite o Diretor:",
+                    "Diretor",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    diretores.toArray(),
+                    filmeSelecionado.getDiretor());
+            if (novoDiretor != null) {
+                filmeSelecionado.setDiretor(novoDiretor); // Atualiza o diretor
+            }
+
+            // Persiste as mudanças no banco de dados
+            persistencia.merge(filmeSelecionado);
+
+            // Atualiza a lista de filmes exibida
+            listarFilmes(); 
+
+        } catch (Exception e) {
+            System.err.println("Erro ao editar o filme: " + e.getMessage());
+        } finally {
+            persistencia.fecharConexao();
         }
+    } else {
+        JOptionPane.showMessageDialog(this, "Selecione um filme para editar.");
+    }
     }//GEN-LAST:event_btnEditarActionPerformed
 
     /**

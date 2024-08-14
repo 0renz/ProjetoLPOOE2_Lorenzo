@@ -4,6 +4,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import paginadecinema.modelo.Atores;
 import paginadecinema.modelo.Diretores;
 import paginadecinema.modelo.Filmes;
 import paginadecinema.modelo.Roteiristas;
@@ -70,5 +71,9 @@ public class PersistenciaJPA implements InterfacePersistencia {
     
     public List<Diretores> getDiretores() {
         return entity.createQuery("SELECT m FROM Diretores m", Diretores.class).getResultList();
+    }
+    
+    public List<Atores> getAtores() {
+        return entity.createQuery("SELECT m FROM Atores m", Atores.class).getResultList();
     }
 }

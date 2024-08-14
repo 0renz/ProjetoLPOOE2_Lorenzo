@@ -86,6 +86,11 @@ public class TelaInicial extends javax.swing.JFrame {
         });
 
         btnAtores.setText("Gerenciar Atores");
+        btnAtores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAtoresActionPerformed(evt);
+            }
+        });
 
         jScrollPane2.setViewportView(lstFilmes);
 
@@ -162,6 +167,15 @@ public class TelaInicial extends javax.swing.JFrame {
             listarFilmes();
         }
     }//GEN-LAST:event_btnDiretoresActionPerformed
+
+    private void btnAtoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtoresActionPerformed
+        TelaGerenciaAtores telaAtores = new TelaGerenciaAtores(this, true);
+        telaAtores.setVisible(true);
+        
+        if (!telaAtores.isVisible()) {
+            listarFilmes();
+        }
+    }//GEN-LAST:event_btnAtoresActionPerformed
 
     /**
      * @param args the command line arguments

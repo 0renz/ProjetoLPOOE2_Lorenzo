@@ -62,4 +62,9 @@ public class Atores implements Serializable {
     public void setDuble(Dubles duble) {
         this.duble = duble;
     }
+    
+    @Override
+    public String toString() {
+        return idAtor + ": " + nomeAtor;
+    }
 }
