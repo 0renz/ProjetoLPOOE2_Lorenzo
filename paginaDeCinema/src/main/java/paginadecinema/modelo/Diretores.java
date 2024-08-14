@@ -54,6 +54,6 @@ public class Diretores implements Serializable {
     
     @Override
     public String toString() {
-        return idDiretor + ": " + nomeDiretor;
+        return idDiretor + ": " + nomeDiretor + "| Tipo: " + tipoDiretor;
     }
 }

@@ -12,6 +12,7 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import paginadecinema.modelo.Atores;
 import paginadecinema.modelo.Diretores;
+import paginadecinema.modelo.SexoAtor;
 import paginadecinema.modelo.dao.PersistenciaJPA;
 
 /**
@@ -127,14 +128,45 @@ public class TelaGerenciaAtores extends javax.swing.JDialog {
 
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
         try {
-            Atores a = new Atores();
-            a.setNomeAtor(JOptionPane.showInputDialog("Informe o nome do ator: "));
+            // Solicita o nome do diretor
+            String nomeAtor = JOptionPane.showInputDialog("Informe o nome do ator:");
+
+            if (nomeAtor == null || nomeAtor.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Nome inválido, adição cancelada.");
+                return;
+            }
+
+            // Solicita o tipo do diretor
+            SexoAtor sexoAtor = (SexoAtor) JOptionPane.showInputDialog(this,
+                    "Selecione o sexo do ator:",
+                    "Adicionar ator",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    SexoAtor.values(), // Array de valores da enumeração
+                    SexoAtor.MASCULINO); // Valor padrão
+
+            if (sexoAtor == null) {
+                JOptionPane.showMessageDialog(this, "Tipo inválido, adição cancelada.");
+                return;
+            }
+
+            // Cria um novo objeto Diretor e define seus atributos
+            Atores novoAtor = new Atores();
+            novoAtor.setNomeAtor(nomeAtor);
+            novoAtor.setSexoAtor(sexoAtor);
+
+            // Persiste o novo diretor no banco de dados
             persistencia = new PersistenciaJPA();
             persistencia.conexaoAberta();
-            persistencia.persist(a);
-            listarAtores();
+            persistencia.persist(novoAtor);
+            listarAtores(); // Atualiza a lista de diretores
+
         } catch (Exception ex) {
-            Logger.getLogger(TelaGerenciaAtores.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TelaGerenciaDiretores.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (persistencia != null) {
+                persistencia.fecharConexao();
+            }
         }
     }//GEN-LAST:event_btnAdicionarActionPerformed
 
@@ -179,21 +211,40 @@ public class TelaGerenciaAtores extends javax.swing.JDialog {
                 persistencia = new PersistenciaJPA();
                 persistencia.conexaoAberta();
 
+                // Editar nome do diretor
                 String novoNome = JOptionPane.showInputDialog(this,
                         "Edite o nome do ator:",
                         atorSelecionado.getNomeAtor());
 
+                // Se o novo nome não for nulo ou vazio
                 if (novoNome != null && !novoNome.trim().isEmpty()) {
                     atorSelecionado.setNomeAtor(novoNome);
-                    persistencia.merge(atorSelecionado); // Persiste a mudança no banco de dados
-
-                    listarAtores();
                 } else {
                     JOptionPane.showMessageDialog(this, "Nome inválido, edição cancelada.");
+                    return;
                 }
 
+                // Editar tipo de diretor
+                SexoAtor novoSexo = (SexoAtor) JOptionPane.showInputDialog(this,
+                        "Selecione o sexo do ator:",
+                        "Editar sexo",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        SexoAtor.values(), // Array de valores da enumeração
+                        atorSelecionado.getSexoAtor());
+
+                if (novoSexo != null) {
+                    atorSelecionado.setSexoAtor(novoSexo);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Tipo inválido, edição cancelada.");
+                    return;
+                }
+
+                persistencia.merge(atorSelecionado); // Persiste a mudança no banco de dados
+                listarAtores(); // Atualiza a lista de diretores
+
             } catch (Exception e) {
-                System.err.println("Erro ao editar o ator: " + e.getMessage());
+                System.err.println("Erro ao editar o diretor: " + e.getMessage());
             } finally {
                 persistencia.fecharConexao();
             }

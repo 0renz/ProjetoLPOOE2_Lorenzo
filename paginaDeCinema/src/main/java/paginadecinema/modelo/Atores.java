@@ -65,6 +65,6 @@ public class Atores implements Serializable {
     
     @Override
     public String toString() {
-        return idAtor + ": " + nomeAtor;
+        return idAtor + ": " + nomeAtor + "| Sexo: " + sexoAtor;
     }
 }

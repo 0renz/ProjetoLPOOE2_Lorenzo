@@ -11,6 +11,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import paginadecinema.modelo.Diretores;
+import paginadecinema.modelo.TipoDiretor;
 import paginadecinema.modelo.dao.PersistenciaJPA;
 
 /**
@@ -126,14 +127,45 @@ public class TelaGerenciaDiretores extends javax.swing.JDialog {
 
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
         try {
-            Diretores d = new Diretores();
-            d.setNomeDiretor(JOptionPane.showInputDialog("Informe o nome do diretor: "));
+            // Solicita o nome do diretor
+            String nomeDiretor = JOptionPane.showInputDialog("Informe o nome do diretor:");
+
+            if (nomeDiretor == null || nomeDiretor.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Nome inválido, adição cancelada.");
+                return;
+            }
+
+            // Solicita o tipo do diretor
+            TipoDiretor tipoDiretor = (TipoDiretor) JOptionPane.showInputDialog(this,
+                    "Selecione o tipo de diretor:",
+                    "Adicionar Diretor",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    TipoDiretor.values(), // Array de valores da enumeração
+                    TipoDiretor.DIRETOR_EXECUTIVO); // Valor padrão
+
+            if (tipoDiretor == null) {
+                JOptionPane.showMessageDialog(this, "Tipo inválido, adição cancelada.");
+                return;
+            }
+
+            // Cria um novo objeto Diretor e define seus atributos
+            Diretores novoDiretor = new Diretores();
+            novoDiretor.setNomeDiretor(nomeDiretor);
+            novoDiretor.setTipoDiretor(tipoDiretor);
+
+            // Persiste o novo diretor no banco de dados
             persistencia = new PersistenciaJPA();
             persistencia.conexaoAberta();
-            persistencia.persist(d);
-            listarDiretores();
+            persistencia.persist(novoDiretor);
+            listarDiretores(); // Atualiza a lista de diretores
+
         } catch (Exception ex) {
             Logger.getLogger(TelaGerenciaDiretores.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (persistencia != null) {
+                persistencia.fecharConexao();
+            }
         }
     }//GEN-LAST:event_btnAdicionarActionPerformed
 
@@ -178,18 +210,37 @@ public class TelaGerenciaDiretores extends javax.swing.JDialog {
                 persistencia = new PersistenciaJPA();
                 persistencia.conexaoAberta();
 
+                // Editar nome do diretor
                 String novoNome = JOptionPane.showInputDialog(this,
                         "Edite o nome do diretor:",
                         diretorSelecionado.getNomeDiretor());
 
+                // Se o novo nome não for nulo ou vazio
                 if (novoNome != null && !novoNome.trim().isEmpty()) {
                     diretorSelecionado.setNomeDiretor(novoNome);
-                    persistencia.merge(diretorSelecionado); // Persiste a mudança no banco de dados
-
-                    listarDiretores();
                 } else {
                     JOptionPane.showMessageDialog(this, "Nome inválido, edição cancelada.");
+                    return;
                 }
+
+                // Editar tipo de diretor
+                TipoDiretor novoTipo = (TipoDiretor) JOptionPane.showInputDialog(this,
+                        "Selecione o tipo de diretor:",
+                        "Editar Tipo",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        TipoDiretor.values(), // Array de valores da enumeração
+                        diretorSelecionado.getTipoDiretor());
+
+                if (novoTipo != null) {
+                    diretorSelecionado.setTipoDiretor(novoTipo);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Tipo inválido, edição cancelada.");
+                    return;
+                }
+
+                persistencia.merge(diretorSelecionado); // Persiste a mudança no banco de dados
+                listarDiretores(); // Atualiza a lista de diretores
 
             } catch (Exception e) {
                 System.err.println("Erro ao editar o diretor: " + e.getMessage());
